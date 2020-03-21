@@ -1,0 +1,30 @@
+grammar org.xtext.thphr16.Mathinterpreteer with org.eclipse.xtext.common.Terminals
+generate mathinterpreteer "http://www.xtext.org/thphr16/Mathinterpreteer"
+
+MathExp:
+	'result' 'is' exp=Exp 
+;
+
+Exp: 
+PlusOrMinus;
+
+
+PlusOrMinus returns Exp:
+	MultOrDiv ({Plus.left=current} '+' right=MultOrDiv | {Minus.left=current} '-' right=MultOrDiv)*
+;
+
+MultOrDiv returns Exp:
+	Primary ({Mult.left=current} '*' right=Primary | {Div.left=current} '/' right=Primary)*
+;
+
+Primary returns Exp:
+	Numb | Parenthesis
+;
+
+Parenthesis:
+	'(' exp=Exp ')'
+;
+
+Numb:
+	value=INT
+;
